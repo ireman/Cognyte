@@ -9,8 +9,20 @@ Build an entity identification system for a co-pilot agent that predicts relevan
 - **`user_queries.csv`**: User questions with JSON containing field references and entity labels
 - **`fields_description.csv`**: Human-readable descriptions for each field (e.g., `ifc.ootb.CDR.technology` → "Technology used in communication: 2G, 3G, 4G...")
 
-### Key Technique: Field Description Extraction
-For each query, we extract the `name` fields from the JSON and look up their descriptions:
+### Data Extraction from JSON
+
+**Entity Labels Extraction:**
+From each JSON in `user_queries.csv`, we extract entity labels from two keys:
+- `entityType`: The primary entity (e.g., "CDR", "Phone")
+- `relationTargetType`: Related entities in nested statements (e.g., when a CDR query references Phone entities)
+
+```
+JSON: {'entityType': 'CDR', 'statements': [{'type': 'relation', 'parameters': {'relationTargetType': ['Phone']}}]}
+→ Extracted entities: ['CDR', 'Phone']
+```
+
+**Field Descriptions Extraction:**
+For each query, we extract the `name` fields from the JSON and look up their descriptions in `fields_description.csv`:
 ```
 Query: "Find all calls made using 3G technology"
 JSON fields: ifc.ootb.CDR.technology, ifc.ootb.CDR.type
@@ -75,6 +87,12 @@ JSON fields: ifc.ootb.CDR.technology, ifc.ootb.CDR.type
 4. **Description Dependency**
    - Model learned from entity-specific descriptions
    - May not generalize to completely new query patterns
+
+5. **Entity Order Uncertainty**
+   - Current implementation treats entities as an unordered set
+   - Open question: Does the order of entities matter for the downstream task?
+   - If order matters (e.g., primary entity first), the evaluation and model would need adjustment
+   - Current metrics (F1, Exact Match) ignore order - they only check set equality
 
 ### Suggestions for Further Improvement
 
