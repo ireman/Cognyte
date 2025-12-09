@@ -78,7 +78,7 @@ JSON fields: ifc.ootb.CDR.technology, ifc.ootb.CDR.type
 
 2. **Multi-entity Cases**
    - Only 20/149 (13%) test cases have multiple entities
-   - 90% accuracy on multi-entity is good but based on small sample
+   - 95% accuracy on multi-entity is good but based on small sample
 
 3. **Class Imbalance**
    - Some entities have few samples (EVisa Request: 2-4 samples)
